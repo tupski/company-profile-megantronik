@@ -77,6 +77,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('blog.*') ? 'active fw-bold' : '' }}" href="{{ route('blog.index') }}">
+                            <i class="fas fa-blog me-1"></i> Blog
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link {{ request()->routeIs('contact') ? 'active fw-bold' : '' }}" href="{{ route('contact') }}">
                             <i class="fas fa-envelope me-1"></i> Kontak
                         </a>
@@ -119,6 +124,7 @@
                         <li><a href="{{ route('about') }}"><i class="fas fa-chevron-right me-2 small text-primary"></i> Tentang Kami</a></li>
                         <li><a href="{{ route('services') }}"><i class="fas fa-chevron-right me-2 small text-primary"></i> Layanan</a></li>
                         <li><a href="{{ route('products') }}"><i class="fas fa-chevron-right me-2 small text-primary"></i> Produk</a></li>
+                        <li><a href="{{ route('blog.index') }}"><i class="fas fa-chevron-right me-2 small text-primary"></i> Blog</a></li>
                         <li><a href="{{ route('contact') }}"><i class="fas fa-chevron-right me-2 small text-primary"></i> Kontak</a></li>
                     </ul>
                 </div>

@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\ProductController;
@@ -10,6 +11,9 @@ use App\Http\Controllers\Admin\TestimonialController;
 use App\Http\Controllers\Admin\AboutController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\BlogPostController;
+use App\Http\Controllers\Admin\BlogCategoryController;
+use App\Http\Controllers\Admin\BlogTagController;
 
 // Frontend Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -18,6 +22,12 @@ Route::get('/services', [HomeController::class, 'services'])->name('services');
 Route::get('/products', [HomeController::class, 'products'])->name('products');
 Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 Route::post('/contact', [HomeController::class, 'storeContact'])->name('contact.store');
+
+// Blog Routes
+Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
+Route::get('/blog/{post}', [BlogController::class, 'show'])->name('blog.show');
+Route::get('/blog/category/{category}', [BlogController::class, 'category'])->name('blog.category');
+Route::get('/blog/tag/{tag}', [BlogController::class, 'tag'])->name('blog.tag');
 
 // Admin Routes
 Route::prefix('admin')->middleware(['auth'])->group(function () {
@@ -40,6 +50,11 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 
     // Settings
     Route::resource('settings', SettingController::class, ['as' => 'admin']);
+
+    // Blog
+    Route::resource('blog-posts', BlogPostController::class, ['as' => 'admin']);
+    Route::resource('blog-categories', BlogCategoryController::class, ['as' => 'admin']);
+    Route::resource('blog-tags', BlogTagController::class, ['as' => 'admin']);
 });
 
 // Profile Routes
