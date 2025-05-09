@@ -152,7 +152,7 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('node_modules/@ckeditor/ckeditor5-build-classic/build/ckeditor.js') }}"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
     <script>
         // Initialize CKEditor
         ClassicEditor
