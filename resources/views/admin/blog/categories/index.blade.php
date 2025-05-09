@@ -14,7 +14,7 @@
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h6 class="m-0 font-weight-bold text-primary">Daftar Kategori</h6>
             <div class="d-flex align-items-center">
-                <form action="{{ route('admin.blog.categories.index') }}" method="GET" class="d-flex">
+                <form action="{{ route('admin.blog-categories.index') }}" method="GET" class="d-flex">
                     <input type="text" name="search" class="form-control form-control-sm me-2" placeholder="Cari kategori..." value="{{ request('search') }}">
                     <button type="submit" class="btn btn-sm btn-outline-primary">
                         <i class="fas fa-search"></i>
@@ -47,7 +47,7 @@
                                             <button type="button" class="btn btn-sm btn-primary me-1" data-bs-toggle="modal" data-bs-target="#editCategoryModal{{ $category->id }}">
                                                 <i class="fas fa-edit"></i>
                                             </button>
-                                            <form action="{{ route('admin.blog.categories.destroy', $category) }}" method="POST" class="d-inline">
+                                            <form action="{{ route('admin.blog-categories.destroy', $category) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus kategori ini?')">
@@ -62,7 +62,7 @@
                                 <div class="modal fade" id="editCategoryModal{{ $category->id }}" tabindex="-1" aria-labelledby="editCategoryModalLabel{{ $category->id }}" aria-hidden="true">
                                     <div class="modal-dialog">
                                         <div class="modal-content">
-                                            <form action="{{ route('admin.blog.categories.update', $category) }}" method="POST">
+                                            <form action="{{ route('admin.blog-categories.update', $category) }}" method="POST">
                                                 @csrf
                                                 @method('PUT')
                                                 <div class="modal-header">
@@ -110,7 +110,7 @@
     <div class="modal fade" id="addCategoryModal" tabindex="-1" aria-labelledby="addCategoryModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="{{ route('admin.blog.categories.store') }}" method="POST">
+                <form action="{{ route('admin.blog-categories.store') }}" method="POST">
                     @csrf
                     <div class="modal-header">
                         <h5 class="modal-title" id="addCategoryModalLabel">Tambah Kategori</h5>

@@ -43,6 +43,13 @@ class BlogController extends Controller
         $post->load(['category', 'tags', 'user']);
         $post->incrementViewCount();
 
+        // Load comments with their replies
+        $post->load(['comments' => function($query) {
+            $query->approved()->parentOnly()->with(['replies' => function($q) {
+                $q->approved();
+            }]);
+        }]);
+
         $related = BlogPost::with('category')
             ->published()
             ->where('id', '!=', $post->id)

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\BlogController;
+use App\Http\Controllers\BlogCommentController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ServiceController;
 use App\Http\Controllers\Admin\ProductController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\BlogPostController;
 use App\Http\Controllers\Admin\BlogCategoryController;
 use App\Http\Controllers\Admin\BlogTagController;
+use App\Http\Controllers\Admin\BlogCommentController as AdminBlogCommentController;
 
 // Frontend Routes
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -25,9 +27,10 @@ Route::post('/contact', [HomeController::class, 'storeContact'])->name('contact.
 
 // Blog Routes
 Route::get('/blog', [BlogController::class, 'index'])->name('blog.index');
-Route::get('/blog/{post}', [BlogController::class, 'show'])->name('blog.show');
 Route::get('/blog/category/{category}', [BlogController::class, 'category'])->name('blog.category');
 Route::get('/blog/tag/{tag}', [BlogController::class, 'tag'])->name('blog.tag');
+Route::get('/blog/{post}', [BlogController::class, 'show'])->name('blog.show');
+Route::post('/blog/{post}/comment', [BlogCommentController::class, 'store'])->name('blog.comment.store');
 
 // Admin Routes
 Route::prefix('admin')->middleware(['auth'])->group(function () {
@@ -49,12 +52,16 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::resource('contacts', ContactController::class, ['as' => 'admin']);
 
     // Settings
-    Route::resource('settings', SettingController::class, ['as' => 'admin']);
+    Route::get('settings', [SettingController::class, 'index'])->name('admin.settings.index');
+    Route::post('settings', [SettingController::class, 'update'])->name('admin.settings.update');
 
     // Blog
     Route::resource('blog-posts', BlogPostController::class, ['as' => 'admin']);
     Route::resource('blog-categories', BlogCategoryController::class, ['as' => 'admin']);
     Route::resource('blog-tags', BlogTagController::class, ['as' => 'admin']);
+    Route::resource('blog-comments', AdminBlogCommentController::class, ['as' => 'admin'])->except(['create', 'store']);
+    Route::put('blog-comments/{comment}/approve', [AdminBlogCommentController::class, 'approve'])->name('admin.blog-comments.approve');
+    Route::put('blog-comments/{comment}/unapprove', [AdminBlogCommentController::class, 'unapprove'])->name('admin.blog-comments.unapprove');
 });
 
 // Profile Routes

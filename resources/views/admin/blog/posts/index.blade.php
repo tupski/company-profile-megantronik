@@ -5,7 +5,7 @@
 @section('content')
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="h3 mb-0 text-gray-800">Blog Posts</h1>
-        <a href="{{ route('admin.blog.posts.create') }}" class="btn btn-primary">
+        <a href="{{ route('admin.blog-posts.create') }}" class="btn btn-primary">
             <i class="fas fa-plus me-2"></i> Tambah Post
         </a>
     </div>
@@ -14,7 +14,7 @@
         <div class="card-header py-3 d-flex justify-content-between align-items-center">
             <h6 class="m-0 font-weight-bold text-primary">Daftar Post</h6>
             <div class="d-flex align-items-center">
-                <form action="{{ route('admin.blog.posts.index') }}" method="GET" class="d-flex">
+                <form action="{{ route('admin.blog-posts.index') }}" method="GET" class="d-flex">
                     <input type="text" name="search" class="form-control form-control-sm me-2" placeholder="Cari post..." value="{{ request('search') }}">
                     <button type="submit" class="btn btn-sm btn-outline-primary">
                         <i class="fas fa-search"></i>
@@ -74,10 +74,10 @@
                                             <a href="{{ route('blog.show', $post->slug) }}" class="btn btn-sm btn-info me-1" target="_blank" data-bs-toggle="tooltip" title="Lihat">
                                                 <i class="fas fa-eye"></i>
                                             </a>
-                                            <a href="{{ route('admin.blog.posts.edit', $post) }}" class="btn btn-sm btn-primary me-1" data-bs-toggle="tooltip" title="Edit">
+                                            <a href="{{ route('admin.blog-posts.edit', $post) }}" class="btn btn-sm btn-primary me-1" data-bs-toggle="tooltip" title="Edit">
                                                 <i class="fas fa-edit"></i>
                                             </a>
-                                            <form action="{{ route('admin.blog.posts.destroy', $post) }}" method="POST" class="d-inline">
+                                            <form action="{{ route('admin.blog-posts.destroy', $post) }}" method="POST" class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Apakah Anda yakin ingin menghapus post ini?')" data-bs-toggle="tooltip" title="Hapus">
@@ -98,7 +98,7 @@
                 <div class="text-center py-5">
                     <i class="fas fa-newspaper fa-3x text-muted mb-3"></i>
                     <p class="text-muted">Belum ada post yang tersedia.</p>
-                    <a href="{{ route('admin.blog.posts.create') }}" class="btn btn-primary">
+                    <a href="{{ route('admin.blog-posts.create') }}" class="btn btn-primary">
                         <i class="fas fa-plus me-2"></i> Tambah Post
                     </a>
                 </div>

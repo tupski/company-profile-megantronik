@@ -106,6 +106,155 @@
                         </div>
                     </div>
 
+                    <!-- Comments Section -->
+                    @if(\App\Models\Setting::getValue('blog_comments_enabled', 1))
+                    <div class="card shadow-sm border-0 mb-4">
+                        <div class="card-body">
+                            <h3 class="mb-4">Komentar ({{ $post->approvedComments()->count() }})</h3>
+
+                            @if($post->approvedComments()->parentOnly()->count() > 0)
+                                <div class="comments-list mb-5">
+                                    @foreach($post->approvedComments()->parentOnly()->latest()->get() as $comment)
+                                        <div class="comment mb-4" id="comment-{{ $comment->id }}">
+                                            <div class="d-flex">
+                                                <div class="flex-shrink-0">
+                                                    <div class="bg-light rounded-circle d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                                        <i class="fas fa-user text-secondary"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="flex-grow-1 ms-3">
+                                                    <div class="d-flex align-items-center mb-1">
+                                                        <h6 class="mb-0 fw-bold">{{ $comment->name }}</h6>
+                                                        <small class="text-muted ms-2">{{ $comment->created_at->diffForHumans() }}</small>
+                                                    </div>
+                                                    <div class="mb-2">
+                                                        {{ $comment->content }}
+                                                    </div>
+                                                    <button class="btn btn-sm btn-outline-primary reply-btn" data-comment-id="{{ $comment->id }}">
+                                                        <i class="fas fa-reply me-1"></i> Balas
+                                                    </button>
+
+                                                    <!-- Reply Form (Hidden by default) -->
+                                                    <div class="reply-form mt-3 d-none" id="reply-form-{{ $comment->id }}">
+                                                        <form action="{{ route('blog.comment.store', $post) }}" method="POST">
+                                                            @csrf
+                                                            <input type="hidden" name="parent_id" value="{{ $comment->id }}">
+                                                            <div class="mb-3">
+                                                                <input type="text" class="form-control" name="name" placeholder="Nama Anda" value="{{ Auth::check() ? Auth::user()->name : '' }}" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <input type="email" class="form-control" name="email" placeholder="Email Anda" value="{{ Auth::check() ? Auth::user()->email : '' }}" required>
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <textarea class="form-control" name="content" rows="3" placeholder="Tulis balasan Anda di sini..." required></textarea>
+                                                            </div>
+
+                                                            @if(\App\Models\Setting::getValue('captcha_enabled', 0) && \App\Models\Setting::getValue('captcha_site_key'))
+                                                                <div class="mb-3">
+                                                                    @php
+                                                                        $captchaType = \App\Models\Setting::getValue('captcha_type');
+                                                                        $captchaSiteKey = \App\Models\Setting::getValue('captcha_site_key');
+                                                                    @endphp
+
+                                                                    @if($captchaType == 'recaptcha')
+                                                                        <div class="g-recaptcha" data-sitekey="{{ $captchaSiteKey }}"></div>
+                                                                    @elseif($captchaType == 'hcaptcha')
+                                                                        <div class="h-captcha" data-sitekey="{{ $captchaSiteKey }}"></div>
+                                                                    @elseif($captchaType == 'turnstile')
+                                                                        <div class="cf-turnstile" data-sitekey="{{ $captchaSiteKey }}"></div>
+                                                                    @endif
+                                                                </div>
+                                                            @endif
+
+                                                            <div class="d-flex justify-content-end">
+                                                                <button type="button" class="btn btn-outline-secondary me-2 cancel-reply" data-comment-id="{{ $comment->id }}">Batal</button>
+                                                                <button type="submit" class="btn btn-primary">Kirim Balasan</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+
+                                                    <!-- Replies -->
+                                                    @if($comment->replies()->approved()->count() > 0)
+                                                        <div class="replies mt-3">
+                                                            @foreach($comment->replies()->approved()->latest()->get() as $reply)
+                                                                <div class="reply mt-3 border-start border-3 ps-3">
+                                                                    <div class="d-flex align-items-center mb-1">
+                                                                        <h6 class="mb-0 fw-bold">{{ $reply->name }}</h6>
+                                                                        <small class="text-muted ms-2">{{ $reply->created_at->diffForHumans() }}</small>
+                                                                    </div>
+                                                                    <div>
+                                                                        {{ $reply->content }}
+                                                                    </div>
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    @endif
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                            @else
+                                <div class="text-center py-4 text-muted">
+                                    <i class="fas fa-comments fa-3x mb-3"></i>
+                                    <p>Belum ada komentar. Jadilah yang pertama berkomentar!</p>
+                                </div>
+                            @endif
+
+                            <!-- Comment Form -->
+                            <div class="comment-form">
+                                <h4 class="mb-3">Tinggalkan Komentar</h4>
+                                <form action="{{ route('blog.comment.store', $post) }}" method="POST">
+                                    @csrf
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <input type="text" class="form-control @error('name') is-invalid @enderror" name="name" placeholder="Nama Anda" value="{{ old('name', Auth::check() ? Auth::user()->name : '') }}" required>
+                                            @error('name')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <input type="email" class="form-control @error('email') is-invalid @enderror" name="email" placeholder="Email Anda" value="{{ old('email', Auth::check() ? Auth::user()->email : '') }}" required>
+                                            @error('email')
+                                                <div class="invalid-feedback">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <textarea class="form-control @error('content') is-invalid @enderror" name="content" rows="5" placeholder="Tulis komentar Anda di sini..." required>{{ old('content') }}</textarea>
+                                        @error('content')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+
+                                    @if(\App\Models\Setting::getValue('captcha_enabled', 0) && \App\Models\Setting::getValue('captcha_site_key'))
+                                        <div class="mb-3">
+                                            @php
+                                                $captchaType = \App\Models\Setting::getValue('captcha_type');
+                                                $captchaSiteKey = \App\Models\Setting::getValue('captcha_site_key');
+                                            @endphp
+
+                                            @if($captchaType == 'recaptcha')
+                                                <div class="g-recaptcha" data-sitekey="{{ $captchaSiteKey }}"></div>
+                                            @elseif($captchaType == 'hcaptcha')
+                                                <div class="h-captcha" data-sitekey="{{ $captchaSiteKey }}"></div>
+                                            @elseif($captchaType == 'turnstile')
+                                                <div class="cf-turnstile" data-sitekey="{{ $captchaSiteKey }}"></div>
+                                            @endif
+                                        </div>
+                                    @endif
+
+                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-paper-plane me-2"></i> Kirim Komentar
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+
                     <!-- Related Posts -->
                     @if($related->count() > 0)
                         <div class="mb-4">
@@ -172,3 +321,54 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+@if(\App\Models\Setting::getValue('captcha_enabled', 0) && \App\Models\Setting::getValue('captcha_site_key'))
+    @php
+        $captchaType = \App\Models\Setting::getValue('captcha_type');
+    @endphp
+
+    @if($captchaType == 'recaptcha')
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    @elseif($captchaType == 'hcaptcha')
+        <script src="https://js.hcaptcha.com/1/api.js" async defer></script>
+    @elseif($captchaType == 'turnstile')
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    @endif
+@endif
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Show reply form
+        document.querySelectorAll('.reply-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const commentId = this.getAttribute('data-comment-id');
+                document.getElementById(`reply-form-${commentId}`).classList.remove('d-none');
+                this.classList.add('d-none');
+            });
+        });
+
+        // Hide reply form
+        document.querySelectorAll('.cancel-reply').forEach(button => {
+            button.addEventListener('click', function() {
+                const commentId = this.getAttribute('data-comment-id');
+                document.getElementById(`reply-form-${commentId}`).classList.add('d-none');
+                document.querySelector(`.reply-btn[data-comment-id="${commentId}"]`).classList.remove('d-none');
+            });
+        });
+
+        // Scroll to comment if hash exists
+        if (window.location.hash && window.location.hash.startsWith('#comment-')) {
+            const commentId = window.location.hash;
+            const commentElement = document.querySelector(commentId);
+            if (commentElement) {
+                commentElement.scrollIntoView();
+                commentElement.classList.add('bg-light');
+                setTimeout(() => {
+                    commentElement.classList.remove('bg-light');
+                }, 3000);
+            }
+        }
+    });
+</script>
+@endpush

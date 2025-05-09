@@ -65,38 +65,44 @@
                         </a>
                     </li>
                     <li class="nav-item mt-2">
-                        <a class="nav-link {{ request()->routeIs('admin.blog.*') ? 'active' : 'text-white' }} d-flex align-items-center"
+                        <a class="nav-link {{ request()->routeIs('admin.blog-*.*') ? 'active' : 'text-white' }} d-flex align-items-center"
                            data-bs-toggle="collapse" href="#blogSubmenu" role="button"
-                           aria-expanded="{{ request()->routeIs('admin.blog.*') ? 'true' : 'false' }}"
+                           aria-expanded="{{ request()->routeIs('admin.blog-*.*') ? 'true' : 'false' }}"
                            aria-controls="blogSubmenu">
                             <i class="fas fa-blog me-2"></i>
                             <span>Blog</span>
                             <i class="fas fa-chevron-down ms-auto small"></i>
                         </a>
-                        <div class="collapse {{ request()->routeIs('admin.blog.*') ? 'show' : '' }}" id="blogSubmenu">
+                        <div class="collapse {{ request()->routeIs('admin.blog-*.*') ? 'show' : '' }}" id="blogSubmenu">
                             <ul class="nav flex-column ms-3 mt-2">
                                 <li class="nav-item">
-                                    <a href="{{ route('admin.blog.posts.index') }}"
-                                       class="nav-link {{ request()->routeIs('admin.blog.posts.index') ? 'text-primary' : 'text-white-50' }} py-1">
+                                    <a href="{{ route('admin.blog-posts.index') }}"
+                                       class="nav-link {{ request()->routeIs('admin.blog-posts.index') ? 'text-primary' : 'text-white-50' }} py-1">
                                         <i class="fas fa-list-ul me-2"></i> Semua
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('admin.blog.posts.create') }}"
-                                       class="nav-link {{ request()->routeIs('admin.blog.posts.create') ? 'text-primary' : 'text-white-50' }} py-1">
+                                    <a href="{{ route('admin.blog-posts.create') }}"
+                                       class="nav-link {{ request()->routeIs('admin.blog-posts.create') ? 'text-primary' : 'text-white-50' }} py-1">
                                         <i class="fas fa-plus me-2"></i> Tambah
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('admin.blog.categories.index') }}"
-                                       class="nav-link {{ request()->routeIs('admin.blog.categories.*') ? 'text-primary' : 'text-white-50' }} py-1">
+                                    <a href="{{ route('admin.blog-categories.index') }}"
+                                       class="nav-link {{ request()->routeIs('admin.blog-categories.*') ? 'text-primary' : 'text-white-50' }} py-1">
                                         <i class="fas fa-folder me-2"></i> Kategori
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ route('admin.blog.tags.index') }}"
-                                       class="nav-link {{ request()->routeIs('admin.blog.tags.*') ? 'text-primary' : 'text-white-50' }} py-1">
+                                    <a href="{{ route('admin.blog-tags.index') }}"
+                                       class="nav-link {{ request()->routeIs('admin.blog-tags.*') ? 'text-primary' : 'text-white-50' }} py-1">
                                         <i class="fas fa-tags me-2"></i> Tag
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.blog-comments.index') }}"
+                                       class="nav-link {{ request()->routeIs('admin.blog-comments.*') ? 'text-primary' : 'text-white-50' }} py-1">
+                                        <i class="fas fa-comments me-2"></i> Komentar
                                     </a>
                                 </li>
                             </ul>

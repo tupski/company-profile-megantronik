@@ -61,4 +61,14 @@ class BlogPost extends Model
         $this->increment('view_count');
         return $this;
     }
+
+    public function comments()
+    {
+        return $this->hasMany(BlogComment::class, 'blog_post_id');
+    }
+
+    public function approvedComments()
+    {
+        return $this->comments()->approved();
+    }
 }
